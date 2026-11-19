@@ -5,7 +5,7 @@ library(scales)
 # ==============================================================================
 # 1. WCZYTANIE I PRZYGOTOWANIE DANYCH (15 grudnia – 2 stycznia)
 # ==============================================================================
-sciezka_pliku <- "power_system_load_all_29.10.2026-03.11.2026.csv"
+sciezka_pliku <- "../../data/raw/power_system_load_all_29.10.2026-03.11.2026.csv"
 
 if (file.exists(sciezka_pliku)) {
   dane_raw <- read_csv(sciezka_pliku, show_col_types = FALSE)
