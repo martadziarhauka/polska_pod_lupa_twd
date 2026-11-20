@@ -69,17 +69,6 @@ Co zrobiłem: wczytałem dane o zapotrzebowaniu na moc w Polsce, wyciągając sz
 
 Dlaczego taki wykres: połączenie wykresu obszarowego (warstwowego) i liniowego pozwala prześledzić zmiany godzina po godzinie. Dzięki temu wyraźnie widać gwałtowny popołudniowy spadek zapotrzebowania w Wigilię. Oznaczenie szczytu punktem z etykietą zwraca uwagę na punkt zwrotny. Zastosowanie kolorów z palety (bordo dla Wigilii, szałwia i słońce dla tła oraz dni sąsiednich) pozwala łatwo odróżnić specyficzny dzień świąteczny od standardowego profilu.
 
-
-### Wykres 4: „Świąteczne wyhamowanie gospodarki. Zużycie energii dzień po dniu”
-kody/04_energy/energy.R
-
-Dane: PSE (Polskie Sieci Elektroenergetyczne) / energy.instrat.pl – godzinowe zapotrzebowanie na moc w KSE, zagregowane do dobowego zużycia energii, okres 15 grudnia – 2 stycznia.  
-https://energy.instrat.pl/
-
-Co zrobiłem: wykorzystałem te same dane, ale dla szerszego okresu. Obliczyłem dobowe zużycie energii w gigawatogodzinach (GWh). Podzieliłem dni na kategorie: Święta Bożego Narodzenia (24-26.12), Sylwester/Nowy Rok oraz pozostałe dni. Dodatkowo dla wydzielonych podokresów wyliczyłem uśrednione wartości dziennego zużycia, które nałożyłem na wykres.
-
-Dlaczego taki wykres: wykres kolumnowy najlepiej nadaje się do porównania łącznego wolumenu zużycia w poszczególnych dniach. Nałożone poziome, przerywane linie ze średnimi wartościami dla podokresów pokazują skalę zjawiska w ujęciu ogólnym. Użycie palety plakatowej (bordo dla Świąt, słońce dla Nowego Roku, szałwia dla zwykłych dni) automatycznie kieruje wzrok na dni wolne, wizualnie potwierdzając, jak bardzo zapotrzebowanie na prąd spada w okresie świąteczno-noworocznym.
-
 ### Paleta
 Wspólne kolory wykresów są w kody/paleta.R: bordo oznacza Wigilię
 i grudzień, złoto – Nowy Rok, szałwia – pozostałe dni i miesiące.
