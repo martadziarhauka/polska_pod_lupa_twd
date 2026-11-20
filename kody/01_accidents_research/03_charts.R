@@ -1,6 +1,8 @@
 library(dplyr)
 library(ggplot2)
 
+source("kody/paleta.R")   # motyw_plakatu i ROZMIAR_ZATRZYMANIA
+
 # Paleta plakatu — natywne kolory ggplot, bez rastrowego tła.
 KARTA <- "#F5EEE0"
 BORDO <- "#7A1E2B"
@@ -117,11 +119,13 @@ p <- ggplot(plot_table, aes(x = plot_date, y = wanted_arrested, fill = year, gro
     legend.spacing.x = grid::unit(0.25, "cm"),
     plot.title = element_text(face = "bold", colour = TYTUL, size = 34.2),
     plot.caption = element_text(hjust = 0)
-  )
+  ) +
+  motyw_plakatu   # wspólne rozmiary czcionek (kody/paleta.R)
 
 p
 
 # Eksport zachowuje ten sam kremowy kolor co plakat.
 dir.create("output", showWarnings = FALSE)
-ggsave("output/zatrzymani_swieta.png", p, width = 14, height = 7,
-       dpi = 300, bg = KARTA)
+ggsave("output/zatrzymani_swieta.png", p,
+       width = ROZMIAR_ZATRZYMANIA["w"], height = ROZMIAR_ZATRZYMANIA["h"],
+       units = "cm", dpi = 300, bg = KARTA)

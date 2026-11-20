@@ -2,10 +2,19 @@ library(tidyverse)
 library(lubridate)
 library(scales)
 
+# wspólne rozmiary czcionek; działa z katalogu projektu i z kody/04_energy
+source(if (file.exists("kody/paleta.R")) "kody/paleta.R" else "../paleta.R")
+
 # ==============================================================================
 # 1. WCZYTANIE I PRZYGOTOWANIE DANYCH 
 # ==============================================================================
-sciezka_pliku <- "../../data/raw/power_system_load_all_29.10.2026-03.11.2026.csv"
+plik_kse <- "power_system_load_all_29.10.2026-03.11.2026.csv"
+# działa zarówno z katalogu projektu, jak i z kody/04_energy
+sciezka_pliku <- if (file.exists(file.path("data/raw", plik_kse))) {
+  file.path("data/raw", plik_kse)
+} else {
+  file.path("../../data/raw", plik_kse)
+}
 
 if (file.exists(sciezka_pliku)) {
   dane_raw <- read_csv(sciezka_pliku, show_col_types = FALSE)
@@ -58,32 +67,38 @@ rok_analizy <- ifelse(length(lata_z_grudniem) > 0, max(lata_z_grudniem), 2025)
 # ==============================================================================
 # 2. PALETA PLAKATU I PODSTAWOWY MOTYW
 # ==============================================================================
-kol_tlo       <- "#F5EEE0" # Lniane tło
-kol_espresso  <- "#2E1F17" # Espresso (najciemniejsze detale, kontury)
-kol_koryca    <- "#5C4A3D" # Cynamon (główny tekst)
-kol_bordo     <- "#6E1423" # Bordo (nagłówki, akcenty, Boże Narodzenie)
-kol_hwoja     <- "#2F4A37" # Igliwie (podtytuły, linie średnich)
-kol_shalfej   <- "#B7C2AE" # Szałwia (kolumny w tle)
-kol_solnce    <- "#D9A43B" # Słońce (Sylwester i Nowy Rok)
+# kolory ze wspólnej palety plakatu (kody/paleta.R) – tak samo jak na innych wykresach
+kol_espresso  <- ESPRESSO   # najciemniejszy tekst
+kol_koryca    <- CYNAMON    # osie, podpisy, linia przerywana
+kol_bordo     <- WIGILIA    # Wigilia
+kol_hwoja     <- "#315442"  # igliwie – dni sąsiednie (jak na wykresie zatrzymań)
+kol_shalfej   <- INNE       # szałwia – pole pod krzywą
+kol_solnce    <- NOWY_ROK   # złoto – pole Wigilii
 
-styl_plakatowy <- theme_minimal(base_size = 12) +
+# styl jak w weather.R / retail.R: przezroczyste tło, tytuł Helvetica w kolorze CZERWON
+styl_plakatowy <- theme_minimal() +
   theme(
-    plot.background = element_rect(fill = kol_tlo, color = NA),
-    panel.background = element_rect(fill = kol_tlo, color = "#E6D7C3", linewidth = 0.6), # Змінено на kol_tlo
-    plot.title = element_text(family = "serif", face = "bold", size = 16, color = kol_bordo, margin = margin(b = 6)),
-    plot.subtitle = element_text(family = "sans", size = 10.5, color = kol_koryca, margin = margin(b = 14)),
-    plot.caption = element_text(family = "sans", size = 8.5, color = kol_koryca, hjust = 0, margin = margin(t = 12)),
-    panel.grid.minor = element_blank(),
+    plot.background    = element_rect(fill = "transparent", colour = NA),
+    panel.background   = element_rect(fill = "transparent", colour = NA),
     panel.grid.major.x = element_blank(),
-    panel.grid.major.y = element_line(color = "#EADCC9", linewidth = 0.5),
-    axis.title = element_text(family = "sans", color = kol_espresso, size = 10, face = "bold"),
-    axis.text = element_text(family = "sans", color = kol_koryca, size = 9),
-    legend.position = "top",
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_line(colour = SIATKA),
+    
+    plot.title    = element_text(family = "Helvetica", face = "bold",
+                                 colour = CZERWON, hjust = 0, lineheight = 0.9,
+                                 margin = margin(b = 6, unit = "pt")),
+    plot.title.position = "plot",
+    plot.subtitle = element_text(colour = CZERWON),
+    plot.caption  = element_text(colour = CYNAMON, hjust = 0),
+    axis.text     = element_text(colour = CYNAMON),
+    axis.title    = element_text(colour = CYNAMON),
+    
+    legend.position      = "top",
     legend.justification = "left",
-    legend.title = element_blank(),
-    legend.text = element_text(family = "sans", size = 9.5, color = kol_espresso),
-    legend.background = element_rect(fill = kol_tlo, color = NA), 
-    legend.key = element_rect(fill = kol_tlo, color = NA)         
+    legend.title         = element_blank(),
+    legend.text          = element_text(colour = CYNAMON),
+    legend.background    = element_rect(fill = "transparent", colour = NA),
+    legend.key           = element_rect(fill = "transparent", colour = NA)
   )
 
 # ==============================================================================
@@ -129,11 +144,17 @@ wykres_1 <- ggplot(dane_w1_ciagly, aes(x = czas_godzina, y = demand_gw)) +
   scale_y_continuous(labels = label_number(suffix = " GW"), expand = expansion(mult = c(0, 0.08))) +
   coord_cartesian(ylim = c(10, max(dane_w1_ciagly$demand_gw, na.rm = TRUE) * 1.08)) +
   labs(
-    title = paste0("Jak gospodarka wygasza się na święta: profil obciążenia 23–25 grudnia (", rok_analizy, ")"),
-    subtitle = paste0("Zapotrzebowanie na moc w KSE godzina po godzinie (GW). Gwałtowny spadek w Wigilię po godz. ", godzina_szczytu, "."),
+    title = paste0("Jak gospodarka wygasza się na święta:\nprofil obciążenia 23–25 grudnia (", rok_analizy, ")"),
+    subtitle = paste0("Zapotrzebowanie na moc w KSE godzina po godzinie (GW).\nGwałtowny spadek w Wigilię po godz. ", godzina_szczytu, "."),
     x = "Data i godzina",
     y = "Zapotrzebowanie na moc (GW)",
   ) +
-  styl_plakatowy
+  styl_plakatowy +
+  motyw_plakatu   # wspólne rozmiary czcionek (kody/paleta.R)
 
 print(wykres_1)
+
+folder_output <- if (dir.exists("output")) "output" else "../../output"
+ggsave(file.path(folder_output, "energia_p.png"), plot = wykres_1,
+       width = ROZMIAR_ENERGIA["w"], height = ROZMIAR_ENERGIA["h"], units = "cm",
+       dpi = 300, bg = "transparent")

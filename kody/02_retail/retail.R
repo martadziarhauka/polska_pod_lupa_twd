@@ -83,7 +83,7 @@ p <- ggplot(wynik, aes(x = Months, y = mediana, fill = wyroznienie)) +
   geom_hline(yintercept = 0, colour = ZERO) +
   geom_vline(data = rozdzielacze, aes(xintercept = 13),
              colour = LINIA, linewidth = 0.4) +
-  facet_wrap(~ Activity.types, nrow = 1) +
+  facet_wrap(~ Activity.types, nrow = 2) +
 
   # skale
   scale_fill_manual(values = c("Grudzień" = WIGILIA, "Pozostałe miesiące" = INNE),
@@ -98,7 +98,7 @@ p <- ggplot(wynik, aes(x = Months, y = mediana, fill = wyroznienie)) +
        x = "Miesiąc",
        y = "Zmiana sprzedaży, %") +
 
-  # wygląd (rozmiary dobrane do miejsca na plakacie: 18,76 × 9,4 cm)
+  # wygląd (rozmiar na plakacie: ROZMIAR_ZAKUPY w kody/paleta.R)
   theme_minimal(base_size = 9) +
   theme(
     plot.background    = element_rect(fill = "transparent", colour = NA),
@@ -111,17 +111,21 @@ p <- ggplot(wynik, aes(x = Months, y = mediana, fill = wyroznienie)) +
                                  size = 18, colour = CZERWON,
                                  hjust = 0, lineheight = 0.9,
                                  margin = margin(b = 4, unit = "pt")),
+    plot.title.position = "plot",
     plot.subtitle = element_text(colour = CZERWON, size = 8),
     strip.text    = element_text(colour = ESPRESSO, size = 9, face = "bold"),
     axis.text     = element_text(colour = CYNAMON, size = 7),
     axis.title    = element_text(colour = CYNAMON),
+    legend.text   = element_text(colour = CYNAMON),
 
     legend.position      = "top",
     legend.justification = "left"
-  )
+  ) +
+  motyw_plakatu   # wspólne rozmiary czcionek (kody/paleta.R)
 
 
 # --- 4. Zapis ----------------------------------------------------------------
 
-ggsave("~/Desktop/wykres_zakupy_p.png", plot = p,
-       width = 18.76, height = 9.4, units = "cm", dpi = 300, bg = "transparent")
+dir.create("output", showWarnings = FALSE)
+ggsave("output/wykres_zakupy_p.png", plot = p,
+       width = ROZMIAR_ZAKUPY["w"], height = ROZMIAR_ZAKUPY["h"], units = "cm", dpi = 300, bg = "transparent")

@@ -120,10 +120,13 @@ p <- ggplot() +
     legend.position      = "top",
     legend.justification = "left",
     legend.text          = element_text(colour = CYNAMON)
-  )
+  ) +
+  motyw_plakatu   # wspólne rozmiary czcionek (kody/paleta.R)
 
 
 # --- 4. Zapis ----------------------------------------------------------------
 
-ggsave("~/Desktop/pogoda_p.png", plot = p,
-       width = 12, height = 6, dpi = 300, bg = "transparent")
+dir.create("output", showWarnings = FALSE)
+ggsave("output/pogoda_p.png", plot = p,
+       width = ROZMIAR_POGODA["w"], height = ROZMIAR_POGODA["h"], units = "cm",
+       dpi = 300, bg = "transparent")
