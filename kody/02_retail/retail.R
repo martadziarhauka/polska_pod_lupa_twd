@@ -69,7 +69,7 @@ wynik <- wynik %>%
 # na pustym 13. „miesiącu” (factor z tymi samymi poziomami – inaczej panele
 # ułożą się alfabetycznie)
 rozdzielacze <- data.frame(
-  Activity.types = factor(head(levels(wynik$Activity.types), -1),
+  Activity.types = factor(levels(wynik$Activity.types),
                           levels = levels(wynik$Activity.types))
 )
 
