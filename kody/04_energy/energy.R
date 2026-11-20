@@ -3,7 +3,7 @@ library(lubridate)
 library(scales)
 
 # ==============================================================================
-# 1. WCZYTANIE I PRZYGOTOWANIE DANYCH (15 grudnia – 2 stycznia)
+# 1. WCZYTANIE I PRZYGOTOWANIE DANYCH 
 # ==============================================================================
 sciezka_pliku <- "../../data/raw/power_system_load_all_29.10.2026-03.11.2026.csv"
 
@@ -19,9 +19,9 @@ if (file.exists(sciezka_pliku)) {
     ) %>%
     filter(!is.na(datetime), !is.na(demand_mw))
 } else {
-  # Rezerwowe generowanie danych dla zakresu 15.12 - 02.01
+  # Rezerwowe generowanie danych
   set.seed(42)
-  daty_czas <- seq(ymd_hm("2025-12-15 00:00"), ymd_hm("2026-01-02 23:00"), by = "1 hour")
+  daty_czas <- seq(ymd_hm("2025-12-23 00:00"), ymd_hm("2025-12-25 23:00"), by = "1 hour")
   dane_kse <- tibble(datetime = daty_czas) %>%
     mutate(
       date = as_date(datetime),
